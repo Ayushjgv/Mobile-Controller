@@ -62,3 +62,11 @@ sysinfo.txt
 *.bak
 *.swp
 *.orig
+
+
+
+# Node.js dependencies
+node_modules/
+
+# VS Code settings
+.vscode/
