@@ -1,0 +1,64 @@
+# ========== Unity Generated Folders ==========
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+UserSettings/
+
+# ========== Memory Captures ==========
+MemoryCaptures/
+
+# ========== Asset meta data (IMPORTANT) ==========
+# Keep meta files, DO NOT ignore these
+!*.meta
+
+# ========== Visual Studio / Rider ==========
+.vs/
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+
+# ========== JetBrains Rider ==========
+.idea/
+
+# ========== OS Generated Files ==========
+.DS_Store
+Thumbs.db
+
+# ========== Crash Reports ==========
+sysinfo.txt
+
+# ========== Unity Addressables ==========
+/ServerData
+
+# ========== Build files ==========
+*.apk
+*.aab
+*.unitypackage
+*.app
+*.exe
+
+# ========== Streaming Assets (optional) ==========
+# Uncomment if you generate data at runtime
+# Assets/StreamingAssets/
+
+# ========== Logs ==========
+*.log
+
+# ========== Others ==========
+*.bak
+*.swp
+*.orig
