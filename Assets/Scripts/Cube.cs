@@ -1,59 +1,42 @@
-using UnityEngine;
 using System;
-using System.Net;
-using System.Net.Sockets;
-using System.Text;
+using UnityEngine;
+using System.Collections.Concurrent;
 
-[Serializable]
-public class GyroData
+public class Cube : MonoBehaviour
 {
-    public float gyrX;
-    public float gyrY;
-    public float gyrZ;
-}
-
-public class GyroController : MonoBehaviour
-{
-    Socket socket;
-    byte[] buffer = new byte[1024];
-    EndPoint remoteEndPoint = new IPEndPoint(IPAddress.Any, 0);
-
-    public int port = 6000;
-
-    Vector3 rotation = Vector3.zero;
-
-    void Start()
-    {
-        socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-        socket.Bind(new IPEndPoint(IPAddress.Any, port));
-
-        Debug.Log("Gyro Receiver Started");
-    }
+    public Receiver receiver;
+    public float sensitivity = 100f;
 
     void Update()
     {
-        if (socket.Available > 0)
+        if (receiver == null) return;
+
+        while (receiver.messageQueue.TryDequeue(out string json))
         {
-            int length = socket.ReceiveFrom(buffer, ref remoteEndPoint);
-            string message = Encoding.UTF8.GetString(buffer, 0, length);
+            try
+            {
+                GyroData data = JsonUtility.FromJson<GyroData>(json);
+                if (data == null) return;
 
-            int jsonStart = message.IndexOf('{');
-            if (jsonStart >= 0)
-                message = message.Substring(jsonStart);
+                float x = -data.gyrX * sensitivity * Time.deltaTime;
+                float y = -data.gyrZ * sensitivity * Time.deltaTime;
+                float z = -data.gyrY * sensitivity * Time.deltaTime;
 
-            GyroData data = JsonUtility.FromJson<GyroData>(message);
-
-            float sensitivity = 200f;
-
-            rotation.x += data.gyrY * sensitivity * Time.deltaTime;
-            rotation.y += -data.gyrX * sensitivity * Time.deltaTime;
-
-            transform.rotation = Quaternion.Euler(rotation);
+                transform.Rotate(x, y, z, Space.World);
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning("Failed to parse packet: " + e.Message);
+            }
         }
     }
 
-    void OnApplicationQuit()
+    [System.Serializable]
+    private class GyroData
     {
-        socket?.Close();
+        public float gyrX;
+        public float gyrY;
+        public float gyrZ;
+        public long  gyr_time;
     }
 }
